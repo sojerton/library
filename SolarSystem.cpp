@@ -1,3 +1,4 @@
+#include <iostream>
 #include <windows.h>
 #include <vector>
 #ifndef LABA
@@ -13,7 +14,7 @@
 using namespace std;
 
 #define PI 3.14
-
+//углы поворота
 float   angleMoon=0.0,
         angleEarth=0.0,
         angleAstroid=0.0,
@@ -27,7 +28,9 @@ float   angleMoon=0.0,
 
 GLfloat sx=0.2,sy=0.2,sz=0.2;
 
+int key;
 int planet1;
+int angleOrbit=0;
 //задаем цвета
 GLfloat black[]={0.0f,0.0f,0.0f,1.0f};
 GLfloat white[]={1.0f,1.0f,1.0f,1.0f};
@@ -71,7 +74,7 @@ void orbit()
         glPushMatrix();
 
         if(i==5) {glRotatef(45,1.0,0.0,0.0);}
-        else {glRotatef(63,1.0,0.0,0.0);}
+        else {glRotatef(63-angleOrbit,1.0,0.0,0.0);}
 
         glScalef(sc[i],sc[i],sc[i]);
 
@@ -92,152 +95,129 @@ void draw(void)
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     orbit();
     glLoadIdentity();
-    glPushMatrix();
-    //разрешаем глубину цвета
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_COLOR_MATERIAL);
 
     glPushMatrix();
-    glColor3f(0.7,0.5,0.0);
-    glScalef(sx,sy,sz);
+        //разрешаем глубину цвета
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_COLOR_MATERIAL);
 
-    glLightfv(GL_LIGHT7,GL_POSITION,qPos);
+        glPushMatrix();//СОЛНЦЕ
+            glColor3f(0.7,0.5,0.0);
+            glScalef(sx,sy,sz);
+            glLightfv(GL_LIGHT7,GL_POSITION,qPos);
+            glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,yellow);
+            glutSolidSphere(1,50,50);
+            glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);
+        glPopMatrix();//СОЛНЦЕ
 
-    glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,yellow);
-    glutSolidSphere(1,50,50);
-    glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,black);
-    glPopMatrix();
+        glScalef(0.2,0.2,0.2);
 
-    glScalef(0.2,0.2,0.2);
+        glPushMatrix();//МЕРКУРИЙ
+            glRotatef(angleMercury,0.0,1.0,-0.5);
+            glTranslatef(1.5,0.0,0.0);//сдвиг по осям
+            glColor3f(1.0,0.9,0.0);
+            glScalef(0.08,0.08,0.08);//форма и размер
+            glutSolidSphere(1,50,50);
+        glPopMatrix();//МЕРКУРИЙ
 
-    glPushMatrix();
-        glRotatef(angleMercury,0.0,1.0,-0.5);
-        glTranslatef(1.5,0.0,0.0);
-        glColor3f(1.0,0.9,0.0);
-        glScalef(0.08,0.08,0.08);
-        glutSolidSphere(1,50,50);
-    glPopMatrix();
+        glPushMatrix();//ВЕНЕРА
+            glRotatef(angleVenus,0.0,1.0,-0.5);
+            glTranslatef(2.0,0.0,0.0);//сдвиг по осям
+            glColor3f(0.9,0.1,0.0);
+            glScalef(0.1,0.1,0.1);//форма и размер
+            glutSolidSphere(1,50,50);
+        glPopMatrix();//ВЕНЕРА
 
-    glPushMatrix();
-        glRotatef(angleVenus,0.0,1.0,-0.5);
-        glTranslatef(2.0,0.0,0.0);
-        glColor3f(0.9,0.1,0.0);
-        glScalef(0.1,0.1,0.1);
-        glutSolidSphere(1,50,50);
-    glPopMatrix();
+        glPushMatrix();//ЗЕМЛЯ
+            glRotatef(angleEarth,0.0,1.0,-0.5);
+            glTranslatef(2.5,0.0,0.0);//сдвиг по осям
+            glColor3f(0.0,0.1,0.7);
+            glScalef(0.23,0.23,0.23);//форма и размер
+            glutSolidSphere(1,50,50);
+            glPushMatrix();//ЛУНА
+                glRotatef(angleMoon,0.0,0.1,0.05);
+                glTranslatef(1.3,0.0,0.0);//сдвиг по осям
+                glColor3f(1.0,1.0,1.0);
+                glScalef(0.5,0.5,0.5);//форма и размер
+                glutSolidSphere(0.5,50,50);
+            glPopMatrix();//ЛУНА
+        glPopMatrix();//ЗЕМЛЯ
 
-    glPushMatrix();
-        glRotatef(angleEarth,0.0,1.0,-0.5);
-        glTranslatef(2.5,0.0,0.0);
-        glColor3f(0.0,0.1,0.7);
-        glScalef(0.23,0.23,0.23);
-        glutSolidSphere(1,50,50);
-        glPushMatrix();
-            glRotatef(angleMoon,0.0,0.1,0.05);
-            glTranslatef(1.3,0.0,0.0);
-            glColor3f(1.0,1.0,1.0);
-            glScalef(0.5,0.5,0.5);
-            glutSolidSphere(0.5,50,50);
-        glPopMatrix();//moon made
-    glPopMatrix();//earth made
+        glPushMatrix();//МАРС
+            glRotatef(angleMars,0.0,1.0,-0.5);
+            glTranslatef(-3.0,0.0,0.0);//сдвиг по осям
+            glColor3f(0.05,0.05,0.01);
+            glScalef(0.17,0.17,0.17);//форма и размер
+            glutSolidSphere(1,50,50);
+        glPopMatrix();//МАРС
 
-    glPushMatrix();
-        glRotatef(angleMars,0.0,1.0,-0.5);
-        glTranslatef(-3.0,0.0,0.0);
-        glColor3f(0.05,0.05,0.01);
-        glScalef(0.17,0.17,0.17);
-        glutSolidSphere(1,50,50);
-    glPopMatrix();
+        glPushMatrix();//ЮПИТЕР
+            glRotatef(angleJupiter,0.0,1.0,-0.5);
+            glTranslatef(-4.0,0.0,0.0);//сдвиг по осям
+            glColor3f(0.4,0.2,0.0);
+            glScalef(0.5,0.5,0.5);//форма и размер
+            glutSolidSphere(1,50,50);
+            glPushMatrix();//СПУТНИК ЮПИТЕРА
+                glRotatef(angleMoon,1.0,-0.5,0.0);
+                glTranslatef(0.0,0,1.1);//сдвиг по осям
+                glColor3f(1.0,1.0,1.0);
+                glScalef(0.1,0.1,0.1);//форма и размер
+                glutSolidSphere(0.5,50,50);
+            glPopMatrix();//СПУТНИК ЮПИТЕРА
+        glPopMatrix();//ЮПИТЕР
 
-    glPushMatrix();
-    glColor3f(3.30,3.30,3.30);
-             glRotatef(63,1.0,0.0,0.0);
-             int j=0,i=0,div=90;float siz=2;
-             float scl[4]={3.3,3.4,3.35,3.2};
-             for(j=0;j<4;j++)
-             {glPushMatrix();siz-=0.3;
-             glPointSize(siz);
-             glScalef(scl[j],scl[j],scl[j]);
-             glBegin(GL_POINTS);
-                double ang1=0.0 -angleAstroid,a=(2*PI)/div;
-                for(i=0;i<div;i++)
-                  {glVertex2d(cos(ang1),sin(ang1));
-                   ang1+=a;  }
-                   div+=10;
-            glEnd();
-            glPopMatrix();
-             }
-           glPopMatrix();//astroid made
-
-    glPushMatrix();
-        glRotatef(angleJupiter,0.0,1.0,-0.5);
-        glTranslatef(-4.0,0.0,0.0);
-        glColor3f(0.4,0.2,0.0);
-        glScalef(0.5,0.5,0.5);
-        glutSolidSphere(1,50,50);
-        glPushMatrix();
-            glRotatef(angleMoon,1.0,-0.5,0.0);
-            glTranslatef(0.0,0,1.1);
-            glColor3f(1.0,1.0,1.0);
-            glScalef(0.1,0.1,0.1);
-            glutSolidSphere(0.5,50,50);
-        glPopMatrix();//moon made
-    glPopMatrix();
-
-    glPushMatrix();
-    glRotatef(angleSaturn,0.0,1.0,-1.0);
-    glTranslatef(-5.0,0.0,0.0);
-    glColor3f(0.9,0.0,0.0);
-    glScalef(0.4,0.4,0.4);
-    glutSolidSphere(1,50,50);
-         glPushMatrix();
-             glRotatef(45,1.0,0.0,0.0);
-             glPointSize(3);
-             glColor3f(5.0,3.0,1.0);
-             glScalef(1.2,1.2,1.2);
-             glBegin(GL_POINTS);
+        glPushMatrix();//САТУРН
+            glRotatef(angleSaturn,0.0,1.0,-1.0);
+            glTranslatef(-5.0,0.0,0.0);//сдвиг по осям
+            glColor3f(0.9,0.0,0.0);
+            glScalef(0.4,0.4,0.4);//форма и размер
+            glutSolidSphere(1,50,50);
+            glPushMatrix();//ПОЯС САТУРНА
+                glRotatef(45,1.0,0.0,0.0);
+                glPointSize(3);
+                glColor3f(5.0,3.0,1.0);
+                glScalef(1.2,1.2,1.2);//форма и размер
+                glBegin(GL_POINTS);
                 double ang1=0.0;
                 for(int i=0;i<50;i++)
-                  {glVertex2d(cos(ang1),sin(ang1));
-                   ang1+=angular;  }
-            glEnd();
+                {
+                    glVertex2d(cos(ang1),sin(ang1));
+                    ang1+=angular;
+                }
+                glEnd();
+                glPointSize(2);
+            glPopMatrix();//ПОЯС САТУРНА
+        glPopMatrix();//САТУРН
 
-            glPointSize(2);
-           glPopMatrix();//ring made
-       glPopMatrix();
+           glPushMatrix();//УРАН
+             glRotatef(angleUranus,0.0,1.0,-0.5);
+             glTranslatef(5.2,0.0,0.0);//сдвиг по осям
+             glColor3f(0.0,0.5,0.9);
+             glScalef(0.23,0.23,0.23);//форма и размер
+             glutSolidSphere(1,50,50);
+           glPopMatrix();//УРАН
 
-       glPushMatrix();
-         glRotatef(angleUranus,0.0,1.0,-0.5);
-         glTranslatef(5.2,0.0,0.0);
-         glColor3f(0.0,0.5,0.9);
-         glScalef(0.23,0.23,0.23);
-         glutSolidSphere(1,50,50);
-       glPopMatrix();
-
-       glPushMatrix();
-         glRotatef(angleNeptune,0.0,1.0,-0.5);
-         glTranslatef(-5.7,0.0,0.0);
-         glColor3f(0.0,0.0,0.9);
-         glScalef(0.2,0.2,0.2);
-         glutSolidSphere(1,50,50);
-       glPopMatrix();
-
-
-glPopMatrix();
-     glFlush();
+           glPushMatrix();//НЕПТУН
+             glRotatef(angleNeptune,0.0,1.0,-0.5);
+             glTranslatef(-5.7,0.0,0.0);//сдвиг по осям
+             glColor3f(0.0,0.0,0.9);
+             glScalef(0.2,0.2,0.2);//форма и размер
+             glutSolidSphere(1,50,50);
+           glPopMatrix();//НЕПТУН
+    glPopMatrix();
+    //ускорение работы освобождением буфера
+    glFlush();
 }
 
-
+//отрисовка кадра
 void update(int value)
 {
-    if ((angleMoon>=0 && angleMoon<180))    {sx-=0.0003;sy-=0.0003;sz-=0.0003;}
-    else                                    {sx+=0.0003;sy+=0.0003;sz+=0.0003;}
-
+//скорости поворота планет по окружности
     angleMoon+=2;
     if(angleMoon>360){
         angleMoon-=360;}
 
-    angleEarth+=0.7;
+    angleEarth+=2.7;
     if(angleEarth>360){
         angleEarth-=360;}
 
@@ -269,16 +249,34 @@ void update(int value)
     if(angleNeptune>360){
         angleNeptune-=360;}
 
-    angleAstroid+=0.002;
-    if(angleAstroid>360){
-        angleAstroid-=360;}
+cin>>key;
+    if (key<3 && key>0) {
+            switch (key){
+            case 1: break;
+            case 2: cin>>angleOrbit;
+            }
+    }
 
+    //обновление кадра
     glutPostRedisplay();
+    //вызов таймера
     glutTimerFunc(20,update,0);
+}
+
+void Menu(void){
+    system("cls");
+    cout << "1. запуск."<<endl;
+    cout << "2. Изменить угол наклона орбит(0-63)."<<endl;
+    cout << "3. Изменить ."<<endl;
 }
 
 int main(int argc, char **argv)
 {
+    setlocale(LC_ALL,"rus");
+    Menu();
+    //int key;
+
+
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
     //Задается размер окна
@@ -296,5 +294,6 @@ int main(int argc, char **argv)
     glutTimerFunc(25,update,0);
     //Запускается оболочка GLUT
     glutMainLoop();
+
     return 0;
 }
