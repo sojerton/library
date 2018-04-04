@@ -82,7 +82,7 @@ void second(NOVEL&novels, vector<NOVEL>&s){
         v.at(k).data[j].name=s[i].name;
         j++;
         i++;
-        cout<<"xui";
+        cout<<"ffff";
         }
     }
     for(vector<TOM>::iterator it = v.begin(); it != v.end(); it++)
