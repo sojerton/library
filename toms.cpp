@@ -57,7 +57,13 @@ public:
 }sortObject;
 
 void first(vector<NOVEL>&s, NOVEL&novels){ //функция записи и сортировки романов для дальнейшей записи в тома
-    cout<<"Введите количество книг: "; cin>>Size;
+    cout<<"Введите количество книг: ";
+    while (!(cin >> Size) || (cin.peek() != '\n')) // защита от ввода неправильных данных
+    {
+        cin.clear();
+        while (cin.get() != '\n');
+        cout << "Ошибка! Попробуйте снова." << endl;
+    }
     string name;
     int numPages;
     register int i;
@@ -67,7 +73,12 @@ void first(vector<NOVEL>&s, NOVEL&novels){ //функция записи и со
         cin.get();
         getline(cin, name);
         cout<<"Количество страниц для "<< name <<endl;
-        cin>>numPages;
+        while (!(cin >> numPages) || (cin.peek() != '\n')) // защита от ввода неправильных данных
+        {
+            cin.clear();
+            while (cin.get() != '\n');
+            cout << "Ошибка! Попробуйте снова." << endl;
+        }
         s.at(i).Set(name, numPages);
     }
     sort(s.begin(), s.end(), sortObject);
@@ -95,7 +106,7 @@ int main()
     cin >>key;//значение для меню
     bool A=true;
     while (A==true){    //запускаем бесконечный цикл
-        if (key<6 && key>0) {
+        if (key<4 && key>0) {
             switch (key){
             case 1:
                 first(s, novels);
@@ -107,7 +118,13 @@ int main()
             case 2:{
                 int *Ptr = NULL; //инициализируем ссылку на имя
                 string *PtrM = NULL; // и страницы
-                cout<<"Введите размер томов: "; cin>>val;
+                cout<<"Введите размер томов: ";
+                while (!(cin >> val) || (cin.peek() != '\n')) // защита от ввода неправильных данных
+                {
+                    cin.clear();
+                    while (cin.get() != '\n');
+                    cout << "Ошибка! Попробуйте снова." << endl;
+                }
                 for(int i=0; i<Size; i++){
                     if(ending){ //пока не дойдет до конца вектора
                         Tom *a = new Tom[Size]; // создаем динамический массив томов
